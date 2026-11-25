@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Practica · Logística comercial y almacenaje</title>
+<style>
+:root{--bg:#eef2ff;--card:#fff;--ink:#0f172a;--mut:#64748b;--line:#e2e8f0;--pri:#4f46e5;--pri2:#7c3aed;--ok:#059669;--okb:#d1fae5;--ko:#e11d48;--kob:#ffe4e6;--t1:#2563eb;--t2:#059669;--t3:#ea580c;--sh:0 1px 2px rgba(15,23,42,.06),0 8px 24px rgba(79,70,229,.08)}
+@media(prefers-color-scheme:dark){:root{--bg:#0b1020;--card:#151c33;--ink:#e8ecf8;--mut:#94a3b8;--line:#27304d;--okb:#064e3b;--kob:#4c0519;--sh:0 8px 24px rgba(0,0,0,.35)}}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(1200px 500px at 50% -200px,rgba(124,58,237,.18),transparent),var(--bg);color:var(--ink);font:16px/1.5 ui-rounded,"SF Pro Rounded",-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh}
+.wrap{max-width:780px;margin:0 auto;padding:18px 16px 60px}
+.hero{background:linear-gradient(135deg,var(--pri),var(--pri2));color:#fff;border-radius:22px;padding:26px 24px;box-shadow:var(--sh);position:relative;overflow:hidden}
+.hero:after{content:"📦";position:absolute;right:18px;bottom:-14px;font-size:96px;opacity:.18;transform:rotate(-12deg)}
+.hero h1{margin:0;font-size:1.7rem;line-height:1.15}
+.hero p{margin:6px 0 0;opacity:.9}
+.hero .pills{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}
+.hero .pills span{background:rgba(255,255,255,.18);border-radius:99px;padding:3px 12px;font-size:.85rem;font-weight:600}
+h1{font-size:1.5rem;margin:8px 0}
+h2{font-size:1.1rem;margin:0 0 12px;letter-spacing:.01em}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;margin:14px 0;box-shadow:var(--sh)}
+.mut{color:var(--mut);font-size:.9rem}
+.center{text-align:center}
+button{font:inherit;cursor:pointer;border-radius:14px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);padding:11px 16px;transition:.15s transform,.15s box-shadow,.15s border-color}
+button:hover{border-color:var(--pri);transform:translateY(-1px)}
+button:active{transform:none}
+button.pri{background:linear-gradient(135deg,var(--pri),var(--pri2));border:0;color:#fff;font-weight:700;box-shadow:0 6px 16px rgba(79,70,229,.35)}
+button:disabled{opacity:.45;cursor:default;transform:none}
+.opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;margin:9px 0;padding:13px 14px;border-radius:16px}
+.opt[data-i]::before{counter-increment:o;content:counter(o,upper-alpha);flex:none;width:28px;height:28px;border-radius:9px;background:var(--bg);display:grid;place-items:center;font-weight:800;font-size:.85rem;color:var(--pri)}
+#body{counter-reset:o}
+.opt.sel{border-color:var(--pri);background:color-mix(in srgb,var(--pri) 9%,var(--card));box-shadow:0 0 0 3px color-mix(in srgb,var(--pri) 22%,transparent)}
+.opt.right{background:var(--okb);border-color:var(--ok);box-shadow:none}
+.opt.wrong{background:var(--kob);border-color:var(--ko);box-shadow:none}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.grow{flex:1}
+label.chk{display:flex;gap:12px;align-items:center;padding:11px 14px;margin:8px 0;border:1.5px solid var(--line);border-radius:14px;cursor:pointer;transition:.15s}
+label.chk:has(input:checked){border-color:var(--pri);background:color-mix(in srgb,var(--pri) 8%,var(--card))}
+label.chk input{width:18px;height:18px;accent-color:var(--pri)}
+.tag{display:inline-block;font-size:.72rem;font-weight:800;color:#fff;border-radius:8px;padding:2px 8px;margin-right:6px;letter-spacing:.03em}
+.t1{background:var(--t1)} .t2{background:var(--t2)} .t3{background:var(--t3)}
+.bar{height:10px;background:var(--line);border-radius:99px;overflow:hidden;margin:10px 0}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--pri),var(--pri2));width:0;border-radius:99px;transition:width .4s}
+.fb{margin-top:14px;padding:12px 14px;border-radius:16px;animation:pop .25s}
+.fb.ok{background:var(--okb)} .fb.ko{background:var(--kob)}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+#body+#fb,.card>h2{margin-top:10px}
+input[type=text],select,input[type=number]{font:inherit;padding:12px 14px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);width:100%}
+input[type=text]:focus,select:focus{outline:none;border-color:var(--pri);box-shadow:0 0 0 3px color-mix(in srgb,var(--pri) 22%,transparent)}
+input[type=number]{width:90px}
+.mrow{display:grid;grid-template-columns:1fr 1.4fr;gap:10px;margin:10px 0;align-items:center}
+@media(max-width:560px){.mrow{grid-template-columns:1fr}}
+.chip{display:inline-block;margin:4px;padding:9px 14px;border:1.5px solid var(--line);border-radius:99px;background:var(--card);cursor:pointer;transition:.15s}
+.chip:hover{border-color:var(--pri)}
+.chip.used{opacity:.3;pointer-events:none}
+.ans{min-height:54px;border:2px dashed var(--line);border-radius:16px;padding:6px;margin:10px 0}
+.ans .chip{background:linear-gradient(135deg,var(--pri),var(--pri2));color:#fff;border:0}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center;margin-top:12px}
+.stats div{background:var(--bg);border-radius:14px;padding:10px;font-size:.85rem;color:var(--mut)}
+.stats b{display:block;font-size:1.4rem;color:var(--ink)}
+.score{font-size:3.2rem;font-weight:900;background:linear-gradient(135deg,var(--pri),var(--pri2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.rev{border-left:5px solid var(--ko);background:var(--card);border-radius:0 14px 14px 0;padding:10px 14px;margin:10px 0}
+.rev.ok{border-color:var(--ok)}
+.hist{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line)}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+/* ===================== BANCO DE PREGUNTAS ===================== */
+/* t: tf | mc | multi | order | match | fill   ·   tema: 1,2,3 */
+const Q = [
+/* ---------- TEMA 1 ---------- */
+{t:'tf',tema:1,q:'La logística integral se ocupa únicamente del transporte de mercancías.',a:false,e:'Abarca almacenaje, flujo directo e inverso de bienes e información, entre el origen y el consumo.'},
+{t:'tf',tema:1,q:'Las actividades logísticas básicas son el transporte y el almacenaje.',a:true,e:'Ambas forman parte de las actividades logísticas.'},
+{t:'tf',tema:1,q:'La cadena de suministro comienza en los proveedores y termina en los clientes finales.',a:true,e:'Está formada por suministro, fabricación y distribución.'},
+{t:'tf',tema:1,q:'La logística interna coordina las operaciones entre proveedores, distribuidores y transportistas.',a:false,e:'Eso es la logística externa. La interna es la de una empresa individualmente considerada.'},
+{t:'tf',tema:1,q:'Una empresa comercial fabrica el producto que distribuye.',a:false,e:'La empresa comercial se dedica a distribuir un producto terminado, pero no lo fabrica.'},
+{t:'tf',tema:1,q:'El flujo de información va en los dos sentidos.',a:true,e:'El flujo de materiales, en cambio, suele ir en un solo sentido.'},
+{t:'tf',tema:1,q:'El flujo de materiales suele ir en un solo sentido (hacia el cliente).',a:true,e:'Salvo el flujo inverso (logística inversa).'},
+{t:'tf',tema:1,q:'Reducir el coste de una actividad logística aislada siempre reduce el coste logístico total.',a:false,e:'Puede aumentar el coste total si se ignora la relación con otras actividades.'},
+{t:'tf',tema:1,q:'Decidir dónde ubicar un almacén es una decisión estratégica.',a:true,e:'Se toma a medio/largo plazo y cambiarla supone muchos gastos.'},
+{t:'tf',tema:1,q:'La cantidad de stock de un producto es una decisión estratégica.',a:false,e:'Es táctica: corto plazo y fácil de modificar.'},
+{t:'tf',tema:1,q:'La logística inversa garantiza el retorno de productos, envases o residuos desde el cliente al fabricante.',a:true,e:'Se compone de logística de devoluciones y de recuperación.'},
+{t:'tf',tema:1,q:'La canibalización consiste en separar el producto en componentes, restaurarlos y juntarlos como si fuera nuevo.',a:false,e:'Eso es el reprocesamiento. Canibalización: recuperar una parte para fabricar otro producto nuevo.'},
+{t:'tf',tema:1,q:'Los costes de rotura de stocks, deterioros y obsolescencia son costes ocultos.',a:true,e:'Los costes ocultos son pérdidas de valor de las existencias difíciles de valorar.'},
+{t:'tf',tema:1,q:'El mayorista vende directamente al cliente final.',a:false,e:'Vende a otras empresas, normalmente minoristas. El minorista/detallista vende al cliente final.'},
+{t:'tf',tema:1,q:'Un canal de distribución corto tiene pocos o ningún intermediario.',a:true,e:'Fabricante→cliente o fabricante→minorista→cliente.'},
+{t:'tf',tema:1,q:'La electricidad, la calefacción y el agua son costes de transporte.',a:false,e:'Son costes generales (dentro de «otros costes logísticos»).'},
+{t:'mc',tema:1,q:'¿Cuál es el objetivo básico de la logística?',o:['Maximizar el stock de seguridad','Que los productos lleguen al cliente en las condiciones pactadas, en el momento y lugar adecuados y al mínimo coste posible','Fabricar el mayor número de unidades','Eliminar todos los intermediarios'],a:1,e:'Genera utilidades de forma, tiempo y lugar, equilibrando coste y nivel de servicio.'},
+{t:'mc',tema:1,q:'¿Cuál de estas actividades se considera una actividad logística?',o:['Lanzar una campaña de publicidad','Pedir un préstamo al banco','Enviar el pedido de un proveedor a un centro comercial','Contratar un seguro de vida'],a:2,e:'El envío (transporte) es actividad logística; publicidad y financiación no.'},
+{t:'mc',tema:1,q:'El coste de tenencia de stocks está formado por…',o:['Alquiler y amortización del almacén','Primas de seguros y coste de oportunidad de mantener el stock','Salarios del personal de picking','Gastos de electricidad'],a:1,e:'Forma parte de los costes de almacenamiento.'},
+{t:'mc',tema:1,q:'Los sistemas MRP sirven para…',o:['Planificar las necesidades de materiales (cuánto y cuándo)','Medir la satisfacción del cliente','Calcular rutas de transporte','Codificar ubicaciones'],a:0,e:'MRP = planificación de necesidades de materiales, función de la gestión de fabricación.'},
+{t:'mc',tema:1,q:'«Cambio, reparación o inspección de alguna de sus partes, lo que aumenta la vida útil del producto» es…',o:['Reparación','Renovación','Reciclaje','Reutilización directa'],a:1,e:'Renovación.'},
+{t:'mc',tema:1,q:'¿Qué decisión de transporte NO figura entre las que debe tomar la empresa?',o:['Elegir el medio de transporte','Subcontratar o no el transporte','Calcular el número de rutas','Decidir el color de los vehículos'],a:3,e:'Medio, subcontratación, nº de rutas y nº de medios de transporte.'},
+{t:'multi',tema:1,q:'La logística integral planifica y controla… (marca todas las correctas)',o:['El almacenaje','El flujo directo e inverso de bienes','La información relacionada','La publicidad de la empresa'],a:[0,1,2],e:'Los tres elementos son almacenaje, flujo de bienes (directo e inverso) e información.'},
+{t:'multi',tema:1,q:'Son costes de almacenamiento… (marca todas)',o:['Coste del espacio','Coste de las instalaciones','Coste de manipulación','Coste de tenencia de stocks','Coste del personal que hace los pedidos'],a:[0,1,2,3],e:'Los costes del personal que hace los pedidos son de aprovisionamiento.'},
+{t:'order',tema:1,q:'Ordena las 5 funciones del almacenaje.',items:['Recepción de mercancías','Almacenamiento','Conservación','Expedición','Organización y control'],e:'Recepción → almacenamiento → conservación → expedición → organización y control.'},
+{t:'order',tema:1,q:'Ordena las partes de la cadena de suministro.',items:['Suministro','Fabricación','Distribución'],e:'Suministro, fabricación y distribución.'},
+{t:'order',tema:1,q:'Ordena el canal de distribución largo con agente.',items:['Fabricante','Agente','Mayorista','Minorista','Cliente'],e:'Fabricante → agente → mayorista → minorista → cliente.'},
+{t:'match',tema:1,q:'Relaciona cada concepto con su definición.',pairs:[['Logística interna','Gestión de las actividades de una empresa individual'],['Logística externa','Coordinación con proveedores, distribuidores, transportistas…'],['Logística inversa','Retorno de productos/envases del cliente al fabricante'],['Operador logístico','Empresa que planifica y controla el almacenamiento del origen al consumo']],e:'Repasa la sección 2 y 7 del Tema 1.'},
+{t:'match',tema:1,q:'Relaciona cada proceso de reutilización con su definición.',pairs:[['Reparación','Se devuelve el producto al cliente en perfecto estado'],['Reciclaje','Se recuperan los materiales que forman el producto'],['Reprocesamiento','Separar componentes, restaurarlos y volver a juntarlos como nuevo'],['Canibalización','Recuperar una parte para fabricar otro producto'],['Reutilización directa','Cambiando una pieza, el producto se vuelve a utilizar']],e:'Seis procesos: reparación, renovación, reciclaje, reprocesamiento, canibalización y reutilización directa.'},
+{t:'fill',tema:1,q:'La logística ___ garantiza el retorno de productos desde el cliente al fabricante.',a:['inversa'],e:'Logística inversa.'},
+{t:'fill',tema:1,q:'El flujo ___ supone el transporte de bienes desde los fabricantes a los clientes.',a:['directo'],e:'Flujo directo (y flujo inverso para devoluciones).'},
+{t:'fill',tema:1,q:'Una decisión de ubicación del almacén es ___ (estratégica o táctica).',a:['estrategica','estratégica'],e:'Medio/largo plazo y carácter permanente.'},
+
+/* ---------- TEMA 2 ---------- */
+{t:'tf',tema:2,q:'En la recepción, el control cualitativo consiste en extraer una muestra del envío para comprobar su calidad.',a:true,e:'El cuantitativo es el cotejo de la mercancía (contar).'},
+{t:'tf',tema:2,q:'La expedición concluye cuando se recibe el albarán firmado por el cliente.',a:true,e:'El albarán firmado da la conformidad a la mercancía recibida.'},
+{t:'tf',tema:2,q:'El almacén en alquiler es poco flexible porque obliga a contratar un periodo fijo.',a:false,e:'Eso describe el leasing. El alquiler es la opción más flexible.'},
+{t:'tf',tema:2,q:'El leasing es un alquiler con opción de compra.',a:true,e:'Se pierde flexibilidad: periodo predeterminado.'},
+{t:'tf',tema:2,q:'En una plataforma de cross docking la mercancía permanece almacenada varias semanas.',a:false,e:'Permanece pocas horas: se transfiere de recepción a expedición sin almacenar.'},
+{t:'tf',tema:2,q:'Los almacenes de consolidación agrupan pedidos de una zona para ahorrar costes de transporte.',a:true,e:'Consolidación = agrupar.'},
+{t:'tf',tema:2,q:'Un almacén a cielo abierto no requiere ninguna estructura cubierta para la mercancía.',a:true,e:'Se delimita con valla, señal o pintura.'},
+{t:'tf',tema:2,q:'En un almacén automatizado la intervención del personal es muy importante.',a:false,e:'Esa es la característica del convencional; en el automatizado casi no hay personas.'},
+{t:'tf',tema:2,q:'Los accesos al almacén en forma de Y reducen interferencias entre vehículos.',a:true,e:'Facilitan incorporarse a la carretera y abandonarla.'},
+{t:'tf',tema:2,q:'El tráfico dentro del recinto debe ir en el sentido de las agujas del reloj.',a:false,e:'En sentido contrario a las agujas del reloj: mejor visibilidad del conductor.'},
+{t:'tf',tema:2,q:'El almacén en U tiene un único muelle para carga y descarga.',a:true,e:'El flujo es semicircular.'},
+{t:'tf',tema:2,q:'El almacén en I es ideal cuando hay especialización de muelles de carga y descarga.',a:true,e:'Recepción y expedición en extremos opuestos.'},
+{t:'tf',tema:2,q:'En la codificación por pasillo, los números impares se asignan a la derecha.',a:false,e:'Impares a la izquierda y pares a la derecha.'},
+{t:'tf',tema:2,q:'Un SGA permite programar alarmas que avisan de los límites de stock.',a:true,e:'Así se evitan roturas de stock.'},
+{t:'tf',tema:2,q:'En el método del centro de gravedad se pondera cada punto por la cantidad demandada.',a:true,e:'X₀ = ΣXᵢPᵢ / ΣPᵢ.'},
+{t:'tf',tema:2,q:'El camión en el muelle se fija a la zona de carga con un gancho de metal.',a:true,e:'Impide que se mueva durante la operación.'},
+{t:'mc',tema:2,q:'¿Qué ocurre primero en la recepción?',o:['La codificación y entrada','La descarga','Comprobar que el albarán coincide con el pedido','El control cualitativo'],a:2,e:'Albarán = pedido → descarga → cuantitativo → cualitativo → codificación.'},
+{t:'mc',tema:2,q:'Almacén donde la mercancía se guarda temporalmente hasta cargarla en el buque:',o:['Central','Regional','De consolidación','De tránsito'],a:3,e:'Almacén de tránsito.'},
+{t:'mc',tema:2,q:'Almacén cercano a los centros de producción, de gran capacidad, que suministra a otros almacenes:',o:['Central','Regional','De tránsito','De repuestos'],a:0,e:'Almacén central.'},
+{t:'mc',tema:2,q:'Con codificación por estantería, la coordenada (D, A, 7, 5) significa:',o:['Zona D, pasillo A, altura 7, nivel 5','Zona D, estantería A, nivel de profundidad 7, altura 5','Pasillo D, zona A, estantería 7, altura 5','Zona D, estantería A, altura 7, profundidad 5'],a:1,e:'Zona, estantería, profundidad, altura.'},
+{t:'mc',tema:2,q:'Con codificación por pasillo, (D, 2, 7, 5) indica ubicación…',o:['Zona D, pasillo 2, ubicación 7 (lado izquierdo), altura 5','Zona D, pasillo 2, ubicación 7 (lado derecho), altura 5','Zona D, estantería 2, profundidad 7, altura 5','Zona D, pasillo 7, ubicación 2, altura 5'],a:0,e:'El 7 es impar → izquierda.'},
+{t:'mc',tema:2,q:'Calculando el centro de gravedad de Bodegas Díaz Valdés, X₀ vale aproximadamente…',o:['3,683','5,265','4,5','11,5'],a:0,e:'42 350 / 11 500 ≈ 3,683 (el libro pone 3,862, que parece una errata).'},
+{t:'mc',tema:2,q:'La zona de recepción se divide en transvase, inspección y…',o:['Control','Consolidación','Embalaje','Devoluciones'],a:0,e:'Transvase, inspección y control (con el albarán).'},
+{t:'mc',tema:2,q:'¿Qué zona NO es una zona auxiliar?',o:['Devoluciones','Palés vacíos','Consolidación de pedidos','Materiales obsoletos'],a:2,e:'La consolidación pertenece a la zona de expedición.'},
+{t:'mc',tema:2,q:'Es una ventaja de ampliar el ancho de los pasillos unos centímetros:',o:['Más capacidad de almacenamiento','Más rapidez y seguridad en los movimientos de equipos','Menos zonas de preparación','Menor coste de construcción'],a:1,e:'Se pierde algo de capacidad pero se gana rapidez, seguridad y menos daños.'},
+{t:'multi',tema:2,q:'Motivos por los que existen almacenes (marca todos):',o:['Desequilibrios entre oferta y demanda','Mejora del servicio al cliente','Reducción de costes logísticos (rappels)','Complemento al proceso productivo','Eliminar el transporte'],a:[0,1,2,3],e:'Los cuatro primeros son los motivos habituales.'},
+{t:'multi',tema:2,q:'Son zonas auxiliares del almacén:',o:['Devoluciones','Palés vacíos','Servicios (descanso, aseos)','Oficinas','Muelles de carga'],a:[0,1,2,3],e:'Los muelles son zona externa.'},
+{t:'multi',tema:2,q:'Actividades de la expedición:',o:['Selección de la mercancía (picking)','Embalaje','Elección del medio de transporte y documentación','Control cuantitativo de la recepción'],a:[0,1,2],e:'El control cuantitativo es de la recepción.'},
+{t:'order',tema:2,q:'Ordena los pasos de la recepción.',items:['Comprobar albarán = pedido','Descarga','Control cuantitativo','Control cualitativo (muestra)','Codificación y entrada'],e:'Es el orden lógico de la recepción.'},
+{t:'order',tema:2,q:'Ordena el flujo por las zonas internas del almacén.',items:['Recepción','Almacenamiento','Expedición'],e:'Recepción → almacenamiento → expedición.'},
+{t:'match',tema:2,q:'Relaciona el tipo de almacén con su descripción.',pairs:[['Central','Cerca de los centros de producción; abastece a otros almacenes'],['Regional','Abastece una zona geográfica y sirve a detallistas'],['De consolidación','Agrupa pedidos de una zona para ahorrar transporte'],['De tránsito','Almacena temporalmente hasta cargar en el medio de transporte']],e:'Criterio: situación geográfica / función logística.'},
+{t:'match',tema:2,q:'Relaciona cada almacén con su criterio de clasificación.',pairs:[['Materias primas','Según mercancía almacenada'],['Propiedad / alquiler / leasing','Según régimen jurídico'],['A cielo abierto / cubierto','Según estructura'],['Convencional / automatizado','Según grado de automatización']],e:'Cinco criterios de la sección 3.'},
+{t:'fill',tema:2,q:'El almacén en forma de ___ tiene un único muelle para carga y descarga.',a:['u'],e:'Almacén en U, flujo semicircular.'},
+{t:'fill',tema:2,q:'El ___ docking transfiere las entregas de recepción a expedición sin almacenar.',a:['cross'],e:'Cross docking.'},
+{t:'fill',tema:2,q:'Los almacenes con muelle de cierre metálico o ___ de abrigo evitan pérdidas de temperatura.',a:['fuelle'],e:'Fuelle de abrigo: abraza el camión.'},
+
+/* ---------- TEMA 3 ---------- */
+{t:'tf',tema:3,q:'Las mercancías ligeras pesan hasta 5 kg y las muy pesadas más de 1 tonelada.',a:true,e:'Ligeras ≤5 kg · medias 5–25 kg · pesadas 25 kg–1 t · muy pesadas >1 t.'},
+{t:'tf',tema:3,q:'El peso recomendado según AECOC para Europalé e Isopalé es 500 kg.',a:false,e:'Es 1 000 kg.'},
+{t:'tf',tema:3,q:'Los silos se utilizan para almacenar mercancía a granel.',a:true,e:'Entrada por arriba y salida por abajo.'},
+{t:'tf',tema:3,q:'Las grúas aéreas tienen como inconveniente que necesitan techos muy altos y resistentes.',a:true,e:'Ventaja: mantienen despejado el suelo.'},
+{t:'tf',tema:3,q:'El mástil de un transelevador es telescópico.',a:false,e:'El mástil es fijo, no tiene telescopaje.'},
+{t:'tf',tema:3,q:'El apilador mixto tiene tracción eléctrica y elevación manual.',a:false,e:'Tracción manual y elevación eléctrica. Es el más usado.'},
+{t:'tf',tema:3,q:'Las carretillas retráctiles necesitan pasillos más anchos que las contrapesadas.',a:false,e:'Necesitan pasillos inferiores y alcanzan mayor altura.'},
+{t:'tf',tema:3,q:'La carretilla trilateral puede manipular la carga en posición frontal, izquierda y derecha.',a:true,e:'Es el tipo más habitual de toma lateral.'},
+{t:'tf',tema:3,q:'Los AGV necesitan un conductor a bordo.',a:false,e:'Son vehículos guiados automáticamente, sin conductor.'},
+{t:'tf',tema:3,q:'El sistema drive-in sigue un criterio de salida LIFO.',a:true,e:'Un único pasillo de acceso: el primero en entrar es el último en salir.'},
+{t:'tf',tema:3,q:'El sistema drive-through permite FIFO porque se carga y descarga por lados opuestos.',a:true,e:'Estanterías en isla.'},
+{t:'tf',tema:3,q:'En el sistema compacto se pueden almacenar varias referencias distintas por pasillo.',a:false,e:'Solo una referencia por pasillo.'},
+{t:'tf',tema:3,q:'En el sistema dinámico solo se permite una referencia por camino de rodillos.',a:true,e:'Por eso el control de stock es excelente.'},
+{t:'tf',tema:3,q:'El sistema móvil elimina todos los pasillos menos uno.',a:true,e:'Estanterías sobre bases móviles que se desplazan por raíles.'},
+{t:'tf',tema:3,q:'En el sistema cantilever, cuanto mayor es la longitud de la ménsula, mayor es el peso que soporta.',a:false,e:'Relación inversa: 400 mm→300 kg; 800 mm→125 kg.'},
+{t:'tf',tema:3,q:'Los almacenes autoportantes pueden superar los 35 m de altura.',a:true,e:'Las estanterías integran la estructura del edificio.'},
+{t:'tf',tema:3,q:'El almacenamiento miniload maneja mercancía paletizada.',a:false,e:'Maneja cajas o bandejas, no palés.'},
+{t:'tf',tema:3,q:'La tecnología RFID permite distinguir unidades con el mismo SKU, a diferencia del código de barras.',a:true,e:'Aporta trazabilidad y fiabilidad de la información.'},
+{t:'mc',tema:3,q:'¿Qué equipo se usa para almacenar mercancía a granel?',o:['Transpaleta','Silo','Apilador','Lanzadera'],a:1,e:'Silos: equipos estáticos.'},
+{t:'mc',tema:3,q:'AGV guiado por un hilo conductor bajo el suelo que emite radiofrecuencia:',o:['Optoguiado','Filoguiado','Guiado por banda magnética','Guiado por láser'],a:1,e:'Filoguiado.'},
+{t:'mc',tema:3,q:'Sistema ideal para tubos, maderas o paneles:',o:['Bloques apilados','Compacto','Cantilever','Dinámico'],a:2,e:'Cargas de gran longitud sobre brazos.'},
+{t:'mc',tema:3,q:'Sistema útil para picking de pequeños envases en la industria farmacéutica:',o:['Dispensadores','Drive-in','Autoportante','Cantilever'],a:0,e:'Tolvas verticales con mecanismo dosificador.'},
+{t:'mc',tema:3,q:'Un apilador autopropulsado puede llegar a…',o:['500 kg y 1,5 m','1 000 kg y 2 m','1 500 kg y 3,6 m','3 000 kg y 10 m'],a:2,e:'1 500 kg de capacidad y 3,6 m de elevación.'},
+{t:'mc',tema:3,q:'Capacidad de 6 estanterías × 4 alturas × 20 huecos × 2 palés por hueco:',o:['480 palés','960 palés','240 palés','1 920 palés'],a:1,e:'6·4·20·2 = 960.'},
+{t:'mc',tema:3,q:'Una carretilla trilateral usada 36 h de las 54 h previstas tiene un grado de utilización de…',o:['54 %','66,7 %','150 %','36 %'],a:1,e:'36/54 = 0,667.'},
+{t:'mc',tema:3,q:'Si hay que almacenar 12 100 palés y cada estantería admite 3 072, ¿cuántas estanterías hacen falta?',o:['3','4','5','6'],a:1,e:'12 100 / 3 072 = 3,93 → 4 estanterías (2 pasillos).'},
+{t:'mc',tema:3,q:'Densidad de almacenamiento: compacto 1 050 bultos, dinámico 600, bloques 345, todos en 750 m². ¿Cuál aprovecha mejor la superficie?',o:['Compacto (1,4 bultos/m²)','Dinámico (0,8)','Bloques apilados (0,46)','Todos igual'],a:0,e:'Compacto > dinámico > bloques apilados.'},
+{t:'mc',tema:3,q:'Brazo cantilever de 600 mm: capacidad de carga…',o:['300 kg','230 kg','180 kg','125 kg'],a:2,e:'400→300, 500→230, 600→180, 700→150, 800→125.'},
+{t:'multi',tema:3,q:'Equipos dinámicos SIN traslado:',o:['Cintas transportadoras','Lanzaderas','Grúas aéreas','Transelevadores','Carretillas'],a:[0,1,2,3],e:'Las carretillas son dinámicas con traslado.'},
+{t:'multi',tema:3,q:'Equipos dinámicos CON traslado:',o:['Transpaletas','Apiladores','Carretillas','AGV','Silos'],a:[0,1,2,3],e:'Los silos son estáticos.'},
+{t:'multi',tema:3,q:'Ventajas del sistema compacto:',o:['Alta densidad de almacenamiento','No hay deterioro por apilado','Seguimiento estricto FIFO/LIFO','Permite muchas referencias por pasillo'],a:[0,1,2],e:'Solo una referencia por pasillo (inconveniente).'},
+{t:'order',tema:3,q:'Ordena el peso de las mercancías de menor a mayor.',items:['Ligeras (hasta 5 kg)','Medias (5-25 kg)','Pesadas (25 kg-1 t)','Muy pesadas (más de 1 t)'],e:'Ligeras < medias < pesadas < muy pesadas.'},
+{t:'order',tema:3,q:'Ordena el recorrido de una bandeja en el sistema Shuttle OSR.',items:['Estantería','Shuttle','Elevador','Cintas transportadoras','Puesto de preparación'],e:'Estantería → shuttle → elevador → cintas → puesto de preparación.'},
+{t:'match',tema:3,q:'Relaciona la carretilla con su característica.',pairs:[['Contrabalanceada','Contrapeso de hierro trasero'],['Retráctil','Extiende y recoge horquillas/mástil; pasillos estrechos'],['De toma lateral','Trilateral: frontal, izquierda y derecha'],['Recogepedidos','Cabina que sube con las horquillas (hombre arriba)']],e:'Tipos de carretilla.'},
+{t:'match',tema:3,q:'Relaciona el guiado del AGV con su funcionamiento.',pairs:[['Filoguiado','Hilo conductor bajo el suelo con radiofrecuencia'],['Banda magnética','Detector con señal más intensa sobre la banda'],['Optoguiado','Línea pintada detectada por sensores ópticos']],e:'Tres tecnologías de guiado.'},
+{t:'match',tema:3,q:'Relaciona el sistema con su rasgo principal.',pairs:[['Bloques apilados','Productos homogéneos separados por pasillos; baja inversión'],['Drive-in','Un único pasillo de acceso; LIFO'],['Dinámico','Caminos de rodillos con gravedad; FIFO/LIFO'],['Móvil','Estanterías sobre raíles; un solo pasillo'],['Miniload','Cajas o bandejas con transelevador']],e:'Repasa el Anexo A de la guía.'},
+{t:'fill',tema:3,q:'FIFO significa First In, First ___.',a:['out'],e:'El primero en entrar es el primero en salir.'},
+{t:'fill',tema:3,q:'Los silos almacenan mercancía a ___.',a:['granel'],e:'Mercancía sin envasar.'},
+{t:'fill',tema:3,q:'La tecnología ___ resuelve que el código de barras no distinga unidades con el mismo SKU.',a:['rfid'],e:'RFID aporta trazabilidad.'},
+{t:'fill',tema:3,q:'Los ___ circulan por pasillos estrechos a gran velocidad por un raíl inferior y otro en el techo.',a:['transelevadores','transelevador'],e:'Tienen mástil fijo y dos movimientos.'}
+];
+Q.forEach((q,i)=>q.id=i);
+
+/* ===================== UTILIDADES ===================== */
+const $=s=>document.querySelector(s);
+const app=$('#app');
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const norm=s=>s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9,.\s]/g,'').trim();
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const TYPES={tf:'Verdadero/Falso',mc:'Elegir opción',multi:'Varias correctas',order:'Ordenar',match:'Relacionar',fill:'Completar'};
+const TEMAS={1:'Tema 1 · Logística y almacenaje',2:'Tema 2 · El almacén',3:'Tema 3 · Equipos y sistemas'};
+const store={get:()=>{try{return JSON.parse(localStorage.getItem('logq')||'{}')}catch(e){return{}}},set:v=>{try{localStorage.setItem('logq',JSON.stringify(v))}catch(e){}}};
+let S=null; // estado del test
+
+/* ===================== PANTALLA INICIO ===================== */
+function home(){
+  const st=store.get(); const fails=(st.fails||[]).length;
+  const hist=st.hist||[];
+  app.innerHTML=`
+  <div class="hero"><h1>Logística comercial y almacenaje</h1><p>Practica con test, verdadero/falso, ordenar y relacionar.</p><div class="pills"><span>${Q.length} preguntas</span><span>3 temas</span><span>6 tipos</span></div></div>
+  <div class="card"><h2>1 · Temas</h2>
+    ${[1,2,3].map(t=>`<label class="chk"><input type="checkbox" class="tm" value="${t}" checked><span class="tag t${t}">T${t}</span>${TEMAS[t]} <span class="mut">(${Q.filter(q=>q.tema==t).length})</span></label>`).join('')}
+  </div>
+  <div class="card"><h2>2 · Tipos de pregunta</h2>
+    ${Object.keys(TYPES).map(k=>`<label class="chk"><input type="checkbox" class="ty" value="${k}" checked>${TYPES[k]} <span class="mut">(${Q.filter(q=>q.t==k).length})</span></label>`).join('')}
+  </div>
+  <div class="card"><h2>3 · Modo</h2>
+    <label class="chk"><input type="radio" name="mode" value="practice" checked><b>Práctica</b>&nbsp;— corrección inmediata con explicación</label>
+    <label class="chk"><input type="radio" name="mode" value="exam"><b>Examen</b>&nbsp;— sin pistas; corrección al final</label>
+    <div class="row" style="margin-top:8px">Nº de preguntas: <input type="number" id="n" min="5" max="${Q.length}" value="20"> <span class="mut">(máx. ${Q.length})</span></div>
+  </div>
+  <div class="row">
+    <button class="pri grow" id="go">▶ Empezar</button>
+    <button id="redo" ${fails?'':'disabled'}>🔁 Repasar falladas (${fails})</button>
+  </div>
+  ${hist.length?`<div class="card"><h2>Últimos resultados</h2>${hist.slice(-5).reverse().map(h=>`<div class="hist"><span>${h.d} · ${h.mode==='exam'?'examen':'práctica'}</span><b>${h.ok}/${h.n} · ${Math.round(100*h.ok/h.n)}%</b></div>`).join('')}
+  <button id="reset" style="margin-top:8px">Borrar progreso</button></div>`:''}`;
+  $('#go').onclick=()=>{
+    const tm=[...document.querySelectorAll('.tm:checked')].map(x=>+x.value);
+    const ty=[...document.querySelectorAll('.ty:checked')].map(x=>x.value);
+    const pool=Q.filter(q=>tm.includes(q.tema)&&ty.includes(q.t));
+    if(!pool.length){alert('Elige al menos un tema y un tipo de pregunta.');return}
+    const n=Math.min(+$('#n').value||20,pool.length);
+    start(shuffle(pool).slice(0,n),document.querySelector('[name=mode]:checked').value);
+  };
+  $('#redo').onclick=()=>{const f=new Set(store.get().fails||[]);start(shuffle(Q.filter(q=>f.has(q.id))),'practice')};
+  const r=$('#reset'); if(r) r.onclick=()=>{if(confirm('¿Borrar historial y falladas?')){localStorage.removeItem('logq');home()}};
+}
+
+/* ===================== TEST ===================== */
+function start(list,mode){S={list,mode,i:0,res:[]};show()}
+
+function show(){
+  const q=S.list[S.i];
+  const pct=Math.round(100*S.i/S.list.length);
+  app.innerHTML=`
+  <div class="row"><button id="quit">✕ Salir</button><div class="grow mut" style="text-align:right">Pregunta ${S.i+1} de ${S.list.length} · ${S.res.filter(r=>r.ok).length} ✓</div></div>
+  <div class="bar"><i style="width:${pct}%"></i></div>
+  <div class="card">
+    <div><span class="tag t${q.tema}">T${q.tema}</span><span class="mut">${TYPES[q.t]}</span></div>
+    <h2 style="margin-top:8px">${q.t==='fill'?esc(q.q).replace('___','<span style="border-bottom:2px solid var(--pri);padding:0 24px"></span>'):esc(q.q)}</h2>
+    <div id="body"></div>
+    <div id="fb"></div>
+    <div class="row" style="margin-top:12px"><button class="pri" id="check">Comprobar</button></div>
+  </div>`;
+  $('#quit').onclick=()=>{if(confirm('¿Salir del test?'))home()};
+  const get=build(q);
+  $('#check').onclick=()=>{
+    const r=get(); if(r===null){return}
+    const ok=evaluate(q,r);
+    S.res.push({q,ok,r});
+    if(S.mode==='exam'){next();return}
+    feedback(q,ok);
+  };
+}
+
+function next(){S.i++; S.i<S.list.length?show():finish()}
+
+function feedback(q,ok){
+  $('#check').disabled=true;
+  document.querySelectorAll('#body button,#body select,#body input').forEach(e=>e.disabled=true);
+  $('#fb').innerHTML=`<div class="fb ${ok?'ok':'ko'}"><b>${ok?'✅ ¡Correcto!':'❌ Incorrecto'}</b><div>${esc(q.e||'')}</div><div class="mut">${ok?'':'Respuesta correcta: '+esc(answerText(q))}</div></div>
+  <div class="row" style="margin-top:12px"><button class="pri" id="nx">${S.i+1<S.list.length?'Siguiente →':'Ver resultados'}</button></div>`;
+  paintCorrect(q);
+  $('#nx').onclick=next;
+}
+
+/* ---- construcción de cada tipo; devuelve función que lee la respuesta (o null si falta) ---- */
+function build(q){
+  const b=$('#body');
+  if(q.t==='tf'){
+    b.innerHTML=`<button class="opt" data-v="1">✔ Verdadero</button><button class="opt" data-v="0">✘ Falso</button>`;
+    let v=null;
+    b.querySelectorAll('.opt').forEach(e=>e.onclick=()=>{b.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));e.classList.add('sel');v=e.dataset.v==='1'});
+    return()=>v;
+  }
+  if(q.t==='mc'||q.t==='multi'){
+    const idx=shuffle(q.o.map((_,i)=>i)); const sel=new Set();
+    b.innerHTML=(q.t==='multi'?'<div class="mut">Marca todas las correctas</div>':'')+idx.map(i=>`<button class="opt" data-i="${i}">${esc(q.o[i])}</button>`).join('');
+    b.querySelectorAll('.opt').forEach(e=>e.onclick=()=>{
+      const i=+e.dataset.i;
+      if(q.t==='mc'){sel.clear();b.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'))}
+      if(sel.has(i)){sel.delete(i);e.classList.remove('sel')}else{sel.add(i);e.classList.add('sel')}
+    });
+    return()=>sel.size?[...sel].sort():null;
+  }
+  if(q.t==='fill'){
+    b.innerHTML=`<input type="text" id="fi" placeholder="Escribe la palabra que falta" autocomplete="off">`;
+    const el=$('#fi'); el.focus(); el.onkeydown=e=>{if(e.key==='Enter')$('#check').click()};
+    return()=>el.value.trim()?el.value:null;
+  }
+  if(q.t==='order'){
+    const pool=shuffle(q.items.map((_,i)=>i)); let ans=[];
+    const draw=()=>{
+      b.innerHTML=`<div class="mut">Toca los elementos en el orden correcto</div>
+      <div class="ans">${ans.map(i=>`<span class="chip">${ans.indexOf(i)+1}. ${esc(q.items[i])}</span>`).join('')}</div>
+      <div>${pool.map(i=>`<span class="chip ${ans.includes(i)?'used':''}" data-i="${i}">${esc(q.items[i])}</span>`).join('')}</div>
+      <button id="undo" style="margin-top:8px">↶ Deshacer</button>`;
+      b.querySelectorAll('[data-i]').forEach(e=>e.onclick=()=>{ans.push(+e.dataset.i);draw()});
+      $('#undo').onclick=()=>{ans.pop();draw()};
+    };
+    draw();
+    return()=>ans.length===q.items.length?ans.slice():null;
+  }
+  if(q.t==='match'){
+    const rights=shuffle(q.pairs.map((_,i)=>i));
+    b.innerHTML=q.pairs.map((p,i)=>`<div class="mrow"><div><b>${esc(p[0])}</b></div><select data-i="${i}"><option value="">— elige —</option>${rights.map(r=>`<option value="${r}">${esc(q.pairs[r][1])}</option>`).join('')}</select></div>`).join('');
+    return()=>{const v=[...b.querySelectorAll('select')].map(s=>s.value);return v.every(x=>x!=='')?v.map(Number):null};
+  }
+}
+
+function evaluate(q,r){
+  if(q.t==='tf')return r===q.a;
+  if(q.t==='mc')return r.length===1&&r[0]===q.a;
+  if(q.t==='multi')return JSON.stringify(r)===JSON.stringify(q.a.slice().sort());
+  if(q.t==='fill')return q.a.map(norm).includes(norm(r));
+  if(q.t==='order')return r.every((v,i)=>v===i);
+  if(q.t==='match')return r.every((v,i)=>v===i);
+}
+function answerText(q){
+  if(q.t==='tf')return q.a?'Verdadero':'Falso';
+  if(q.t==='mc')return q.o[q.a];
+  if(q.t==='multi')return q.a.map(i=>q.o[i]).join(' · ');
+  if(q.t==='fill')return q.a[0];
+  if(q.t==='order')return q.items.map((x,i)=>(i+1)+'. '+x).join('  →  ');
+  if(q.t==='match')return q.pairs.map(p=>p[0]+' = '+p[1]).join(' | ');
+}
+function paintCorrect(q){
+  const b=$('#body');
+  if(q.t==='tf'){const sel=b.querySelector('.sel');b.querySelectorAll('.opt').forEach(e=>{if((e.dataset.v==='1')===q.a)e.classList.add('right')});if(sel&&!sel.classList.contains('right'))sel.classList.add('wrong')}
+  if(q.t==='mc'||q.t==='multi'){const c=q.t==='mc'?[q.a]:q.a;b.querySelectorAll('.opt').forEach(e=>{const i=+e.dataset.i;if(c.includes(i))e.classList.add('right');else if(e.classList.contains('sel'))e.classList.add('wrong')})}
+  if(q.t==='match'){b.querySelectorAll('select').forEach(s=>{s.style.borderColor=(+s.value===+s.dataset.i)?'var(--ok)':'var(--ko)'})}
+}
+
+/* ===================== RESULTADOS ===================== */
+function finish(){
+  const ok=S.res.filter(r=>r.ok).length, n=S.res.length;
+  const st=store.get(); const fails=new Set(st.fails||[]);
+  S.res.forEach(r=>{r.ok?fails.delete(r.q.id):fails.add(r.q.id)});
+  st.fails=[...fails]; st.hist=(st.hist||[]).concat({d:new Date().toLocaleDateString('es-ES'),ok,n,mode:S.mode}).slice(-30);
+  store.set(st);
+  const byT=[1,2,3].map(t=>{const r=S.res.filter(x=>x.q.tema===t);return r.length?`<div>Tema ${t}<b>${r.filter(x=>x.ok).length}/${r.length}</b></div>`:''}).join('');
+  const bad=S.res.filter(r=>!r.ok);
+  app.innerHTML=`
+  <h1>Resultado</h1>
+  <div class="card center">
+    <div class="score">${ok}/${n}</div>
+    <div class="mut">${Math.round(100*ok/n)} % de aciertos · nota ${(10*ok/n).toFixed(1)}</div>
+    <div class="bar"><i style="width:${100*ok/n}%;background:${ok/n>=.5?'var(--ok)':'var(--ko)'}"></i></div>
+    <div class="stats">${byT}</div>
+  </div>
+  <div class="row"><button class="pri grow" id="again">Nuevo test</button>${bad.length?`<button id="rf">🔁 Repetir las ${bad.length} falladas</button>`:''}</div>
+  <h2 style="margin-top:18px">Revisión</h2>
+  ${S.res.map(r=>`<div class="rev ${r.ok?'ok':''}"><div>${r.ok?'✅':'❌'} <b>${esc(r.q.q)}</b></div><div class="mut">${r.ok?'':'Correcta: '+esc(answerText(r.q))+'<br>'}${esc(r.q.e||'')}</div></div>`).join('')}`;
+  $('#again').onclick=home;
+  const rf=$('#rf'); if(rf) rf.onclick=()=>start(shuffle(bad.map(r=>r.q)),'practice');
+}
+home();
+</script>
+</body>
+</html>
